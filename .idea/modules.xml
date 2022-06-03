@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/GeeCache.iml" filepath="$PROJECT_DIR$/.idea/GeeCache.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../GeeProject/.idea/GeeProject.iml" filepath="$PROJECT_DIR$/../GeeProject/.idea/GeeProject.iml" />
     </modules>
   </component>
 </project>
