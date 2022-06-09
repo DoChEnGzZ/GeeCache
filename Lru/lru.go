@@ -2,13 +2,15 @@ package Lru
 
 import "container/list"
 
+type OnEvicted func(key string, value Value)
+
 // Cache My cache
 type Cache struct {
-	MaxBytes  int64                         //申请的最大内存空间
-	NowBytes  int64                         //当前使用的内存空间
-	List      *list.List                    //LRU队列
-	cache     map[string]*list.Element      //Cache主体
-	OnEvicted func(key string, value Value) //回调函数,当去除最进未使用的内存块时调用该函数
+	MaxBytes  int64                    //申请的最大内存空间
+	NowBytes  int64                    //当前使用的内存空间
+	List      *list.List               //LRU队列
+	cache     map[string]*list.Element //Cache主体
+	onEvicted OnEvicted                //回调函数,当去除最进未使用的内存块时调用该函数
 }
 
 type Entry struct {
@@ -20,12 +22,12 @@ type Value interface {
 	Len() int
 }
 
-func New(maxBytes int64, onEvicted func(key string, value Value)) *Cache {
+func New(maxBytes int64, onEvicted OnEvicted) *Cache {
 	return &Cache{
 		MaxBytes:  maxBytes,
 		List:      list.New(),
 		cache:     make(map[string]*list.Element),
-		OnEvicted: onEvicted,
+		onEvicted: onEvicted,
 	}
 }
 
@@ -67,8 +69,8 @@ func (c *Cache) RemoveOldEle() {
 		kv := ele.Value.(Entry)
 		delete(c.cache, kv.key)
 		c.NowBytes -= int64(len(kv.key)) + int64(kv.value.Len())
-		if c.OnEvicted != nil {
-			c.OnEvicted(kv.key, kv.value)
+		if c.onEvicted != nil {
+			c.onEvicted(kv.key, kv.value)
 		}
 	}
 }
