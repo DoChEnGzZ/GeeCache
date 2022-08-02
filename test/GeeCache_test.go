@@ -1,10 +1,11 @@
-package main
+package test
 
 import (
 	"GeeCache"
 	"GeeCache/Lru"
 	"fmt"
 	"log"
+	"testing"
 )
 
 var db = map[string]string{
@@ -13,7 +14,7 @@ var db = map[string]string{
 	"Sam":  "567",
 }
 
-func main() {
+func TestGeeCache(t *testing.T) {
 	GeeCahce.NewGroup("LowDB", GeeCahce.GetterFunc(func(key string) ([]byte, error) {
 		log.Printf("[LowDB]Search Key %s", key)
 		if v, ok := db[key]; ok {
